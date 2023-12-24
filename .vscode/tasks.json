@@ -1,0 +1,25 @@
+{
+  // https://code.visualstudio.com/docs/editor/variables-reference
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build tictactoe (Debug)",
+      "type": "shell",
+      "command": "clang++",
+      "args": [
+        //"-O1",
+        "-std=c++20",
+        "-o",
+        "debug/tictactoe",
+        "src/tictactoe.cpp",
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+    }
+  ]
+}
