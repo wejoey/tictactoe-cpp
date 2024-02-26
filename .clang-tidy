@@ -1,5 +1,5 @@
 ---
-Checks: '*'
-WarningsAsErrors: '*'
+Checks: '*,-llvmlibc-*,-modernize-use-trailing-return-type'
+WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle: none

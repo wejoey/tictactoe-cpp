@@ -26,7 +26,7 @@ public:
     bool valid = false;
     while (!valid) {
       std::cout << "Play 'X': \n";
-      unsigned int turn;
+      unsigned int turn{0};
       std::cin >> turn;
       std::cout << "entered: " << turn << std::endl;
 
