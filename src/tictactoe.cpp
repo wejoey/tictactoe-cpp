@@ -1,8 +1,7 @@
 #include <array>
 #include <iostream>
-#include <string>
 
-//enum STATE { X, O, EMPTY };
+// enum STATE { X, O, EMPTY };
 
 using TicTacToeBoard = std::array<std::array<char, 3>, 3>;
 
@@ -14,9 +13,8 @@ using TicTacToeBoard = std::array<std::array<char, 3>, 3>;
 class TicTacToeGame {
 
 public:
-  TicTacToeGame(){
-    for (auto& row : m_Board)
-    {
+  TicTacToeGame() {
+    for (auto &row : m_Board) {
       row[0] = ' ';
       row[1] = ' ';
       row[2] = ' ';
@@ -26,27 +24,22 @@ public:
   void playTurn() {
 
     bool valid = false;
-    while (!valid)
-    {
+    while (!valid) {
       std::cout << "Play 'X': \n";
       unsigned int turn;
       std::cin >> turn;
       std::cout << "entered: " << turn << std::endl;
 
-      if (turn > 0 && turn < 9){
+      if (turn > 0 && turn < 9) {
         valid = true;
-      }
-      else{
+      } else {
         std::cout << "invalid\n";
       }
     }
-
-
   }
 
   void drawBoard() {
-    for (const auto& row : m_Board)
-    {
+    for (const auto &row : m_Board) {
       std::cout << " " << row[0] << " | " << row[1] << " | " << row[2] << " \n";
     }
   }
@@ -54,8 +47,7 @@ public:
   bool isGameOver() {
     if (false) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
@@ -74,18 +66,17 @@ public:
   void printGameOver() {
     std::string printGameOver = "\n\nGame over!\n";
 
-    if (m_Draw){
+    if (m_Draw) {
       printGameOver += "The game is a DRAW.\n";
-    }
-    else{
-     printGameOver += "The winner is ...";
+    } else {
+      printGameOver += "The winner is ...";
     }
 
     std::cout << printGameOver;
   }
 
 private:
-  TicTacToeBoard m_Board;
+  TicTacToeBoard m_Board{};
   bool m_End = false;
   bool m_Draw = false;
 };
