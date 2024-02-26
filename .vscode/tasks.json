@@ -3,16 +3,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build tictactoe (Debug)",
+      "label": "cmake build debug",
       "type": "shell",
-      "command": "clang++",
-      "args": [
-        "-g",
-        "-std=c++20",
-        "-o",
-        "debug/tictactoe",
-        "src/tictactoe.cpp",
-      ],
+      "command": "cmake -B debug -G Ninja && cmake --build debug",
       "options": {
         "cwd": "${workspaceFolder}"
       },
