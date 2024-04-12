@@ -1,97 +1,150 @@
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <ranges>
+#include <utility>
+#include <variant>
+namespace TicTacToeCpp {
 
-// enum STATE { X, O, EMPTY };
+struct TicTacToeGame {
 
-using TicTacToeBoard = std::array<std::array<char, 3>, 3>;
+  enum STATE : char { X = 'X', O = 'O', EMPTY = ' ' };
+  using TicTacToeBoard = std::array<std::array<STATE, 3>, 3>;
+  using Position = std::pair<uint, uint>;
 
-// struct Round {
-//   STATE xo;
-//   std::string toString() { return xo == EMPTY ? "" : xo == X ? "X" : "O"; }
-// };
+  TicTacToeBoard m_Board{
+      {{EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}}};
+  bool m_End{false};
+  bool m_Draw{false};
 
-class TicTacToeGame {
+  void play() {
 
-public:
-  TicTacToeGame() {
-    for (auto &row : m_Board) {
-      row[0] = ' ';
-      row[1] = ' ';
-      row[2] = ' ';
+    printHowToPlay();
+
+    while (!isGameOver()) {
+      bool validTurn = false;
+      while (!validTurn && !isGameOver()) {
+        std::cout << "Play 'X': \n";
+        uint turn{0};
+        std::cin >> turn;
+
+        auto position = getPositionInput(turn);
+        if (std::holds_alternative<Position>(position)) {
+          m_Board[std::get<Position>(position).first]
+                 [std::get<Position>(position).second] = X;
+          validTurn = true;
+        } else {
+          std::cout << "*invalid entry, retry\n";
+        }
+
+        drawBoard();
+      }
+
+      validTurn = false;
+
+      while (!validTurn && !isGameOver()) {
+        std::cout << "Play 'O': \n";
+        uint turn{0};
+        std::cin >> turn;
+        auto position = getPositionInput(turn);
+        if (std::holds_alternative<Position>(position)) {
+          m_Board[std::get<Position>(position).first]
+                 [std::get<Position>(position).second] = O;
+          validTurn = true;
+        } else {
+          std::cout << "*invalid entry, retry\n";
+        }
+        drawBoard();
+      }
+    }
+    printGameOver();
+  }
+
+  Position getRowColPair(uint input) {
+    switch (input) {
+    case 1:
+      return std::move(std::make_pair(0, 0));
+    case 2:
+      return std::move(std::make_pair(0, 1));
+    case 3:
+      return std::move(std::make_pair(0, 2));
+    case 4:
+      return std::move(std::make_pair(1, 0));
+    case 5:
+      return std::move(std::make_pair(1, 1));
+    case 6:
+      return std::move(std::make_pair(1, 2));
+    case 7:
+      return std::move(std::make_pair(2, 0));
+    case 8:
+      return std::move(std::make_pair(2, 1));
+    case 9:
+    default:
+      return std::move(std::make_pair(2, 2));
     }
   }
 
-  void playTurn() {
-
-    bool valid = false;
-    while (!valid) {
-      std::cout << "Play 'X': \n";
-      unsigned int turn{0};
-      std::cin >> turn;
-      std::cout << "entered: " << turn << std::endl;
-
-      if (turn > 0 && turn < 9) {
-        valid = true;
-      } else {
-        std::cout << "invalid\n";
-      }
+  std::variant<bool, Position> getPositionInput(uint input) {
+    if (input < 1 || input > 9) {
+      return false;
     }
+    const auto position = getRowColPair(input);
+    if (m_Board[position.first][position.second] != EMPTY) {
+      return false;
+    }
+    return position;
   }
 
   void drawBoard() {
+    static constexpr std::string_view BOARD_LINE{"-----------\n"};
     for (const auto &row : m_Board) {
-      std::cout << " " << row[0] << " | " << row[1] << " | " << row[2] << " \n";
+      std::cout << BOARD_LINE << " " << row[0] << " | " << row[1] << " | "
+                << row[2] << " \n";
     }
+    std::cout << BOARD_LINE;
   }
 
   bool isGameOver() {
-    if (false) {
-      return true;
-    } else {
-      return false;
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        if (m_Board[row][col] == EMPTY) {
+          return false;
+        }
+      }
     }
+    return true;
   }
 
-  void printHowToPlay() {
-    std::cout << "Play your turn by entering number from 1 to 9 representing "
-                 "the position to play.\n";
-    std::cout << " 1 | 2 | 3 \n";
-    std::cout << "---|---|---\n";
-    std::cout << " 4 | 5 | 6 \n";
-    std::cout << "---|---|---\n";
-    std::cout << " 7 | 8 | 9 \n";
-    std::cout << "\nPress the ENTER key to start the game.\n";
+  static void printHowToPlay() {
+    std::cout << R"(
+Play your turn by entering number from 1 to 9 representing the position to play.
+ 1 | 2 | 3
+---|---|---
+ 4 | 5 | 6
+---|---|---
+ 7 | 8 | 9
+Press the ENTER key to start the game.")";
   }
 
   void printGameOver() {
-    std::string printGameOver = "\n\nGame over!\n";
+    std::string strGameOver{"\n\nGame over!\n"};
 
     if (m_Draw) {
-      printGameOver += "The game is a DRAW.\n";
+      strGameOver += "The game is a DRAW.\n";
     } else {
-      printGameOver += "The winner is ...";
+      strGameOver += "The winner is ...";
     }
 
-    std::cout << printGameOver;
+    std::cout << strGameOver;
   }
 
-private:
-  TicTacToeBoard m_Board{};
-  bool m_End = false;
-  bool m_Draw = false;
-};
+}; // struct
+
+} // namespace TicTacToeCpp
 
 //=============================================================================
 
 int main() {
-  TicTacToeGame game;
-
-  game.printHowToPlay();
-
-  while (!game.isGameOver()) {
-    game.playTurn();
-    game.drawBoard();
-  }
-
-  game.printGameOver();
+  TicTacToeCpp::TicTacToeGame game;
+  game.play();
 }

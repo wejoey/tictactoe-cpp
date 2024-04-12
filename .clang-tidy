@@ -1,5 +1,6 @@
----
-Checks: '*,-llvmlibc-*,-modernize-use-trailing-return-type'
+Checks: '*,
+-llvmlibc-*,-modernize-use-trailing-return-type,-altera-unroll-loops,
+-misc-non-private-member-variables-in-classes,-fuchsia-default-arguments*'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle: none
