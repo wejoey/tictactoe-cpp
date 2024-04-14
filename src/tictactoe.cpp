@@ -10,7 +10,7 @@ struct TicTacToeGame {
 
   enum STATE : char { X = 'X', O = 'O', EMPTY = ' ' };
   using TicTacToeBoard = std::array<std::array<STATE, 3>, 3>;
-  using Position = std::pair<uint, uint>;
+  using Position = std::pair<unsigned int, unsigned int>;
 
   TicTacToeBoard m_Board{
       {{EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}}};
@@ -25,7 +25,7 @@ struct TicTacToeGame {
       bool validTurn = false;
       while (!validTurn && !isGameOver()) {
         std::cout << "Play 'X': \n";
-        uint turn{0};
+        unsigned int turn{0};
         std::cin >> turn;
 
         auto position = getPositionInput(turn);
@@ -44,7 +44,7 @@ struct TicTacToeGame {
 
       while (!validTurn && !isGameOver()) {
         std::cout << "Play 'O': \n";
-        uint turn{0};
+        unsigned int turn{0};
         std::cin >> turn;
         auto position = getPositionInput(turn);
         if (std::holds_alternative<Position>(position)) {
@@ -60,7 +60,7 @@ struct TicTacToeGame {
     printGameOver();
   }
 
-  Position getRowColPair(uint input) {
+  static Position getRowColPair(unsigned int input) {
     switch (input) {
     case 1:
       return std::move(std::make_pair(0, 0));
@@ -84,8 +84,12 @@ struct TicTacToeGame {
     }
   }
 
-  std::variant<bool, Position> getPositionInput(uint input) {
-    if (input < 1 || input > 9) {
+  std::variant<bool, Position> getPositionInput(unsigned int input) {
+    if (input == 0){
+      exit(0);
+    }
+
+    if (input > 9) {
       return false;
     }
     const auto position = getRowColPair(input);
@@ -123,7 +127,7 @@ Play your turn by entering number from 1 to 9 representing the position to play.
  4 | 5 | 6
 ---|---|---
  7 | 8 | 9
-Press the ENTER key to start the game.")";
+Press '0' to quit the game.")";
   }
 
   void printGameOver() {
