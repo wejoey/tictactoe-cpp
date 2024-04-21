@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/debug/tictactoe",
       "args": [],
-      "cwd": "${workspaceFolder}/debug"
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

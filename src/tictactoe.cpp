@@ -1,9 +1,12 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <iterator>
 #include <ranges>
+#include <sstream>
 #include <utility>
 #include <variant>
+
 namespace TicTacToeCpp {
 
 struct TicTacToeGame {
@@ -14,11 +17,11 @@ struct TicTacToeGame {
 
   TicTacToeBoard m_Board{
       {{EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}, {EMPTY, EMPTY, EMPTY}}};
-  bool m_End{false};
-  bool m_Draw{false};
+  STATE m_Winner{EMPTY};
 
   void play() {
 
+    resetBoard();
     printHowToPlay();
 
     while (!isGameOver()) {
@@ -60,6 +63,14 @@ struct TicTacToeGame {
     printGameOver();
   }
 
+  void resetBoard() {
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        m_Board[row][col] = EMPTY;
+      }
+    }
+  }
+
   static Position getRowColPair(unsigned int input) {
     switch (input) {
     case 1:
@@ -85,7 +96,7 @@ struct TicTacToeGame {
   }
 
   std::variant<bool, Position> getPositionInput(unsigned int input) {
-    if (input == 0){
+    if (input == 0) {
       exit(0);
     }
 
@@ -108,7 +119,72 @@ struct TicTacToeGame {
     std::cout << BOARD_LINE;
   }
 
-  bool isGameOver() {
+  bool isGameOver() { return isGameOverMethod1(); }
+
+  // The hard way
+  bool isGameOverMethod1() {
+    if (m_Board[0][0] == STATE::X && m_Board[1][1] == STATE::X &&
+        m_Board[2][2] == STATE::X) {
+      m_Winner = X;
+      return true;
+    }
+    if (m_Board[0][0] == STATE::O && m_Board[1][1] == STATE::O &&
+        m_Board[2][2] == STATE::O) {
+      m_Winner = O;
+      return true;
+    }
+    if (m_Board[0][2] == STATE::X && m_Board[1][1] == STATE::X &&
+        m_Board[2][0] == STATE::X) {
+      m_Winner = X;
+      return true;
+    }
+    if (m_Board[0][2] == STATE::O && m_Board[1][1] == STATE::O &&
+        m_Board[2][0] == STATE::O) {
+      m_Winner = O;
+      return true;
+    }
+    if (m_Board[0][0] == STATE::X && m_Board[1][0] == STATE::X &&
+        m_Board[2][0] == STATE::X) {
+      m_Winner = X;
+      return true;
+    }
+    if (m_Board[0][0] == STATE::O && m_Board[1][0] == STATE::O &&
+        m_Board[2][0] == STATE::O) {
+      m_Winner = O;
+      return true;
+    }
+    if (m_Board[0][1] == STATE::X && m_Board[1][1] == STATE::X &&
+        m_Board[2][1] == STATE::X) {
+      m_Winner = X;
+      return true;
+    }
+    if (m_Board[0][1] == STATE::O && m_Board[1][1] == STATE::O &&
+        m_Board[2][1] == STATE::O) {
+      m_Winner = O;
+      return true;
+    }
+    if (m_Board[0][2] == STATE::X && m_Board[1][2] == STATE::X &&
+        m_Board[2][2] == STATE::X) {
+      m_Winner = X;
+      return true;
+    }
+    if (m_Board[0][2] == STATE::O && m_Board[1][2] == STATE::O &&
+        m_Board[2][2] == STATE::O) {
+      m_Winner = O;
+      return true;
+    }
+    for (int row = 0; row < 3; row++) {
+      if (std::all_of(m_Board[row].cbegin(), m_Board[row].cend(),
+                      [](int i) { return i == X; })) {
+        m_Winner = X;
+        return true;
+      }
+      if (std::all_of(m_Board[row].cbegin(), m_Board[row].cend(),
+                      [](int i) { return i == O; })) {
+        m_Winner = O;
+        return true;
+      }
+    }
     for (int row = 0; row < 3; row++) {
       for (int col = 0; col < 3; col++) {
         if (m_Board[row][col] == EMPTY) {
@@ -131,15 +207,15 @@ Press '0' to quit the game.")";
   }
 
   void printGameOver() {
-    std::string strGameOver{"\n\nGame over!\n"};
+    std::stringstream sstrGameOver{"\n\nGame over!\n"};
 
-    if (m_Draw) {
-      strGameOver += "The game is a DRAW.\n";
+    if (m_Winner == EMPTY) {
+      sstrGameOver << "The game is a DRAW.\n";
     } else {
-      strGameOver += "The winner is ...";
+      sstrGameOver << "The winner is ..." << m_Winner << std::endl;
     }
 
-    std::cout << strGameOver;
+    std::cout << sstrGameOver.str();
   }
 
 }; // struct
@@ -150,5 +226,15 @@ Press '0' to quit the game.")";
 
 int main() {
   TicTacToeCpp::TicTacToeGame game;
-  game.play();
+
+  bool playAgain{true};
+  while (playAgain) {
+    game.play();
+
+    std::cout << "Play again ? [y/n]: ";
+    unsigned char again{0};
+    std::cin >> again;
+
+    playAgain = !std::cin.fail() && again == 'y';
+  }
 }
