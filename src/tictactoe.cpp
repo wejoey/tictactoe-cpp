@@ -1,3 +1,5 @@
+#include "tictactoe.h"
+
 #include <algorithm>
 #include <array>
 #include <iostream>
@@ -6,7 +8,6 @@
 #include <utility>
 #include <variant>
 
-#include "tictactoe.h"
 namespace TicTacToeCpp {
 
 void TicTacToeGame::play() {
@@ -211,20 +212,3 @@ void TicTacToeGame::printGameOver() {
 }
 
 } // namespace TicTacToeCpp
-
-//=============================================================================
-
-int main() {
-  TicTacToeCpp::TicTacToeGame game;
-
-  bool playAgain{true};
-  while (playAgain) {
-    game.play();
-
-    std::cout << "Play again ? [y/n]: ";
-    unsigned char again{0};
-    std::cin >> again;
-
-    playAgain = !std::cin.fail() && again == 'y';
-  }
-}
