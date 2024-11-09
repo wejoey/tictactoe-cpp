@@ -2,19 +2,25 @@
 
 A simple game to introduce my son to programming.
 
-## build
+## CMake generate
 
 ```shell
 mkdir debug
 cmake -B debug -G Ninja -D CMAKE_BUILD_TYPE=Debug
+```
+
+## CMake build
+
+```shell
 cmake --build debug
+```
+
+## Test
+
+```shell
+ctest --test-dir debug
 ```
 
 ## run
 
 `./debug/tictactoe`
-
-## test
-
-`./debug/tictactoe_test`
-todo use `ctest`

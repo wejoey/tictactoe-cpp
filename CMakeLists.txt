@@ -13,13 +13,25 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+# main code
 add_executable(tictactoe src/tictactoe.cpp)
+
+# tests
 add_executable(tictactoe_test test/tictactoe_test.cpp)
 
 target_link_libraries(
   tictactoe_test
   GTest::gtest_main
 )
+
+# enable testing functionality
+enable_testing()
+
+# define tests
+add_test(
+  NAME tictactoe_test
+  COMMAND $<TARGET_FILE:tictactoe_test>
+  )
 
 include(GoogleTest)
 gtest_discover_tests(tictactoe_test)
